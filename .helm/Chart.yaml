@@ -1,0 +1,4 @@
+apiVersion: v2
+name: go-auth
+description: A Helm chart for deploying the Go REST API
+version: 0.1.0

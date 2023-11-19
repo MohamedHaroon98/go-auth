@@ -1,0 +1,32 @@
+replicaCount: 1
+
+
+goAuth:
+  image:
+    repository: go-auth
+    tag: latest
+    pullPolicy: Never 
+
+  service:
+    name: go-auth
+    type: ClusterIP
+    port: 8080
+
+  ingress:
+    enabled: false
+
+mongoDB:
+
+  image:
+    repository: mongo
+    tag: latest
+    pullPolicy: IfNotPresent
+    port: 27017
+
+  service:
+    name: mongodb
+    port: 27017
+    # use k8s secret to hold creds
+    username: root
+    password: "up9>j9~V7O"
+    database: accounts

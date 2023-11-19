@@ -1,0 +1,25 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "go-auth.fullname" . }}-mongodb
+  labels:
+    app: {{ include "go-auth.name" . }}-mongodb
+    chart: {{ include "go-auth.chart" . }}
+spec:
+  replicas: {{ .Values.mongoDB.replicaCount }}
+  selector:
+    matchLabels:
+      app: {{ include "go-auth.name" . }}-mongodb
+      release: {{ .Release.Name }}
+  template:
+    metadata:
+      labels:
+        app: {{ include "go-auth.name" . }}-mongodb
+        release: {{ .Release.Name }}
+    spec:
+      containers:
+        - name: {{ .Chart.Name }}-mongodb
+          image: "{{ .Values.mongoDB.image.repository }}:{{ .Values.mongoDB.image.tag }}"
+          imagePullPolicy: {{ .Values.mongoDB.image.pullPolicy }}
+          ports:
+            - containerPort: {{ .Values.mongoDB.image.port }}

@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "go-auth.fullname" . }}-mongodb
+  labels:
+    app: {{ include "go-auth.name" . }}-mongodb
+    chart: {{ include "go-auth.chart" . }}
+spec:
+  ports:
+    - port: {{ .Values.mongoDB.service.port }}
+      targetPort: {{ .Values.mongoDB.image.port }}
+  selector:
+    app: {{ include "go-auth.name" . }}-mongodb
+    release: {{ .Release.Name }}

@@ -1,0 +1,26 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "go-auth.fullname" . }}
+  labels:
+    app: {{ include "go-auth.name" . }}
+    chart: {{ include "go-auth.chart" . }}
+spec:
+  replicas: {{ .Values.goAuth.replicaCount }}
+  selector:
+    matchLabels:
+      app: {{ include "go-auth.name" . }}
+      release: {{ .Release.Name }}
+  template:
+    metadata:
+      labels:
+        app: {{ include "go-auth.name" . }}
+        release: {{ .Release.Name }}
+    spec:
+      containers:
+        - name: {{ .Chart.Name }}
+          image: "{{ .Values.goAuth.image.repository }}:{{ .Values.goAuth.image.tag }}"
+          imagePullPolicy: {{ .Values.goAuth.image.pullPolicy }}
+          ports:
+            - containerPort: {{ .Values.goAuth.service.port }}
+
