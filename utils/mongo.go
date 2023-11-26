@@ -12,7 +12,6 @@ import (
 
 var client *mongo.Client
 
-// ConnectDB establishes a connection to MongoDB container
 func ConnectDB() *mongo.Client {
 	mongo_server := "go-auth-go-auth-mongodb"
 	server := fmt.Sprintf("mongodb://%s:27017", mongo_server)

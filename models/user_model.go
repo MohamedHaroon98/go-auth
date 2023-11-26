@@ -1,5 +1,3 @@
-// models/account_model.go
-
 package models
 
 type Account struct {

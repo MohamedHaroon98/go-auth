@@ -22,7 +22,6 @@ func init() {
 	collection = client.Database("accounts").Collection("accounts")
 }
 
-// RegisterAccount handles account registration
 func RegisterAccount(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 
@@ -48,7 +47,6 @@ func RegisterAccount(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(result.InsertedID)
 }
 
-// LoginAccount handles account
 func LoginAccount(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 
