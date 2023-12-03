@@ -1,6 +1,5 @@
 replicaCount: 1
 
-
 goAuth:
   image:
     repository: go-auth
@@ -9,11 +8,11 @@ goAuth:
 
   service:
     name: go-auth
-    type: ClusterIP
+    type: NodePort
     port: 8080
 
   ingress:
-    enabled: false
+    enabled: true
 
 mongoDB:
 

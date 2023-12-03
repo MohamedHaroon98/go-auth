@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"log"
+	"net/http"
 	"time"
 
 	"go.mongodb.org/mongo-driver/mongo"
@@ -27,4 +28,18 @@ func ConnectDB() *mongo.Client {
 	}
 
 	return client
+}
+
+func HealthCheckDatabase(w http.ResponseWriter, r *http.Request) {
+
+	if client == nil {
+		client = ConnectDB()
+	}
+	
+	err := client.Ping(context.Background(), nil)
+	if err != nil {
+		http.Error(w, "Database not reachable", http.StatusInternalServerError)
+		return
+	}
+	w.Write([]byte("Database is OK!"))
 }

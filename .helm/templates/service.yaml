@@ -6,7 +6,7 @@ metadata:
     app: {{ include "go-auth.name" . }}
     chart: {{ include "go-auth.chart" . }}
 spec:
-  type: NodePort
+  type: {{ .Values.goAuth.service.type }}
   ports:
     - port: {{ .Values.goAuth.service.port }}
       targetPort: {{ .Values.goAuth.service.port }} 
