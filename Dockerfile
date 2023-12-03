@@ -1,8 +1,11 @@
-FROM golang:1.21.0-alpine
-
+FROM golang:1.21.0-alpine as builder
 WORKDIR /usr/src/app
-
 COPY . .
-RUN go mod tidy 
+RUN go build -o go_auth .
 
-CMD go run main.go -b 0.0.0.0
+FROM alpine:3.18.3
+WORKDIR /bin
+COPY --from=builder /usr/src/app .
+USER nobody
+EXPOSE 8080
+CMD ["go_auth"]
