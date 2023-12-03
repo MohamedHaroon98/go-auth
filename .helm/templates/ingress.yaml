@@ -1,0 +1,21 @@
+{{- if .Values.goAuth.ingress }}
+
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: {{ include "go-auth.fullname" . }}
+  labels:
+    app: {{ include "go-auth.name" . }}
+    chart: {{ include "go-auth.chart" . }}
+spec:
+  rules:
+    - http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: {{ include "go-auth.fullname" . }}
+                port:
+                  number: {{ .Values.goAuth.service.port }}
+{{- end }}
