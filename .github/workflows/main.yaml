@@ -30,8 +30,9 @@ jobs:
           ECR_REPOSITORY: "go-auth"
           IMAGE_TAG: "latest"
         run: |
-          docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
+          docker build -t go-auth .
+          docker tag $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
           docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
           echo "::set-output name=image::$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG"
         
-        # we need now to create deployment.yaml and then we use new image with it, we shouldn't create EKS, it should be created already
+        # we need now to create deployment.yaml and then we use new image in it
