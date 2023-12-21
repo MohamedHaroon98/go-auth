@@ -14,4 +14,5 @@ start_local:
 uninstall:
 	helm uninstall -n go-auth go-auth
 	helm uninstall -n go-auth go-auth
+
 local_testrun:	build initialize_minikube start_local

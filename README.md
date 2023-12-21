@@ -66,7 +66,6 @@ This command performs the build, initializes Minikube, and deploys go-auth and P
 
 ## What's Coming Next? 🌟🚀
 
+
 * need to stop users from being able to register again through /register, instead only allow for changing password through /changepassword
-* GitHub Actions
-* deploy to EKS
 * store users' data in a volume/storage
