@@ -31,7 +31,7 @@ jobs:
           IMAGE_TAG: "latest"
         run: |
           docker build -t go-auth .
-          docker tag $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
+          docker tag go-auth:latest $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
           docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
           echo "::set-output name=image::$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG"
         
