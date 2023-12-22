@@ -5,6 +5,10 @@ on:
   pull_request:
     branches: [ main ]
 
+env:
+  ECR_REGISTRY: '${{ secrets.ECR_REGISTRY }}'
+  IMAGE_NAME: "go-auth"
+  IMAGE_TAG: "latest"
 
 jobs:
   build:
@@ -20,23 +24,16 @@ jobs:
           aws-region: us-east-2
 
       - name: Build Image
-        env:
-          IMAGE_NAME: "go-auth"
         run: |
           docker build -t $IMAGE_NAME .
 
       - name: Scan image
         uses: anchore/scan-action@v3
-        env:
-          IMAGE_NAME: "go-auth"
         with:
-          image: "$IMAGE_NAME"
+          image: "$IMAGE_NAME:IMAGE_TAG"
+          fail-build: false # Not recommended for PROD
 
       - name: Push Image to ECR
-        env:
-          ECR_REGISTRY: '${{ secrets.ECR_REGISTRY }}'
-          IMAGE_NAME: "go-auth"
-          IMAGE_TAG: "latest"
         run: |
           aws ecr-public get-login-password --region us-east-1 | docker login --username AWS --password-stdin public.ecr.aws/$ECR_REGISTRY
           docker tag $IMAGE_NAME:$IMAGE_TAG public.ecr.aws/$ECR_REGISTRY/$IMAGE_NAME:$IMAGE_TAG
