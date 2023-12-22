@@ -27,11 +27,6 @@ jobs:
         run: |
           docker build -t $IMAGE_NAME .
 
-      - name: Scan image
-        uses: anchore/scan-action@v3
-        with:
-          image: "$IMAGE_NAME:IMAGE_TAG"
-          fail-build: false # Not recommended for PROD
 
       - name: Push Image to ECR
         run: |
@@ -39,6 +34,11 @@ jobs:
           docker tag $IMAGE_NAME:$IMAGE_TAG public.ecr.aws/$ECR_REGISTRY/$IMAGE_NAME:$IMAGE_TAG
           docker push public.ecr.aws/$ECR_REGISTRY/$IMAGE_NAME:$IMAGE_TAG
       
+      - name: Scan image
+        uses: anchore/scan-action@v3
+        with:
+          image: public.ecr.aws/$ECR_REGISTRY/$IMAGE_NAME:$IMAGE_TAG
+          fail-build: false # Not recommended for PROD
       
       # - name: Deploy App
       #   uses: WyriHaximus/github-action-helm3@v2.0
