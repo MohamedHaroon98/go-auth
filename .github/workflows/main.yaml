@@ -11,10 +11,6 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-
-      - name: Scan current project
-        uses: anchore/scan-action@v3.3.8
-
       - uses: actions/checkout@v4
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v1
@@ -23,17 +19,30 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: us-east-2
 
-      - name: Build and push the image to ECR
+      - name: Build Image
+        env:
+          IMAGE_NAME: "go-auth"
+        run: |
+          docker build -t $IMAGE_NAME .
+
+      - name: Scan image
+        uses: anchore/scan-action@v3
+        env:
+          IMAGE_NAME: "go-auth"
+        with:
+          image: "$IMAGE_NAME"
+
+      - name: Push Image to ECR
         env:
           ECR_REGISTRY: '${{ secrets.ECR_REGISTRY }}'
           IMAGE_NAME: "go-auth"
           IMAGE_TAG: "latest"
         run: |
           aws ecr-public get-login-password --region us-east-1 | docker login --username AWS --password-stdin public.ecr.aws/$ECR_REGISTRY
-          docker build -t $IMAGE_NAME .
           docker tag $IMAGE_NAME:$IMAGE_TAG public.ecr.aws/$ECR_REGISTRY/$IMAGE_NAME:$IMAGE_TAG
-          docker push public.ecr.aws/$ECR_REGISTRY/$IMAGE_NAME:$IMAGE_TAG        
-
+          docker push public.ecr.aws/$ECR_REGISTRY/$IMAGE_NAME:$IMAGE_TAG
+      
+      
       # - name: Deploy App
       #   uses: WyriHaximus/github-action-helm3@v2.0
       #   with:
