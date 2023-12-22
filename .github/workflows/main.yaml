@@ -39,12 +39,13 @@ jobs:
           docker tag $IMAGE_NAME:$IMAGE_TAG public.ecr.aws/$ECR_REGISTRY/$IMAGE_NAME:$IMAGE_TAG
           docker push public.ecr.aws/$ECR_REGISTRY/$IMAGE_NAME:$IMAGE_TAG        
 
-      # - name: Deploy to EKS # Need to have cluster running
-      #   uses: aws/eks-action@v1
-      #   with:
-      #     eks-cluster-name: Terraform-EKS
-      #     aws-region: us-east-1
-      #     kubectl-config-data: ${{ secrets.KUBE_CONFIG_DATA }}
-      #   run: |
-      #     helm upgrade -i go-auth ./.helm -n go-auth
-      #     helm upgrade -i -n go-auth prometheus prometheus-community/prometheus -f ./.helm/charts/monitoring/values.yaml
+      - uses: WyriHaximus/github-action-helm3@v2.0
+      - name: Deploy App
+        with:
+          exec: helm upgrade -i go-auth ./.helm -n go-auth
+          kubeconfig: '${{ secrets.KUBECONFIG }}'
+
+      - name: Deploy Prometheus
+        with:
+          exec: helm upgrade -i -n go-auth prometheus prometheus-community/prometheus -f ./.helm/charts/monitoring/values.yaml
+          kubeconfig: '${{ secrets.KUBECONFIG }}'
