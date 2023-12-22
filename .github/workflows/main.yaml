@@ -11,8 +11,10 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+
       - name: Anchore Container Scan
         uses: anchore/scan-action@v3.3.8
+
       - uses: actions/checkout@v4
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v1
@@ -21,20 +23,16 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: us-east-2
 
-      - name: Login to Amazon ECR
-        id: login-ecr
-        uses: aws-actions/amazon-ecr-login@v1
-
       - name: Build and push the image to ECR
-        id: build-image
         env:
-          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
-          ECR_REPOSITORY: "go-auth"
+          ECR_REGISTRY: "j6h8q3k6"
+          IMAGE_NAME: "go-auth"
           IMAGE_TAG: "latest"
         run: |
-          docker build -t go-auth .
-          docker tag go-auth:latest public.ecr.aws/j6h8q3k6/go-auth:latest
-          docker push public.ecr.aws/j6h8q3k6/go-auth:latest
-          echo "::set-output name=image::public.ecr.aws/j6h8q3k6/go-auth:latest"
+          aws ecr-public get-login-password --region us-east-1 | docker login --username AWS --password-stdin public.ecr.aws/$ECR_REGISTRY
+          docker build -t $IMAGE_NAME .
+          docker tag $IMAGE_NAME:$IMAGE_TAG public.ecr.aws/$ECR_REGISTRY/$IMAGE_NAME:$IMAGE_TAG
+          docker push public.ecr.aws/$ECR_REGISTRY/$IMAGE_NAME:$IMAGE_TAG
+          echo "::set-output name=image::public.ecr.aws/$ECR_REGISTRY/$IMAGE_NAME:$IMAGE_TAG"
         
         # we need now to create deployment.yaml and then we use new image in it
