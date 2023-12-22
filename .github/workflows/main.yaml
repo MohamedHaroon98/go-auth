@@ -39,13 +39,14 @@ jobs:
           docker tag $IMAGE_NAME:$IMAGE_TAG public.ecr.aws/$ECR_REGISTRY/$IMAGE_NAME:$IMAGE_TAG
           docker push public.ecr.aws/$ECR_REGISTRY/$IMAGE_NAME:$IMAGE_TAG        
 
-      - uses: WyriHaximus/github-action-helm3@v2.0
       - name: Deploy App
+        uses: WyriHaximus/github-action-helm3@v2.0
         with:
           exec: helm upgrade -i go-auth ./.helm -n go-auth
           kubeconfig: '${{ secrets.KUBECONFIG }}'
 
       - name: Deploy Prometheus
+        uses: WyriHaximus/github-action-helm3@v2.0
         with:
           exec: helm upgrade -i -n go-auth prometheus prometheus-community/prometheus -f ./.helm/charts/monitoring/values.yaml
           kubeconfig: '${{ secrets.KUBECONFIG }}'
