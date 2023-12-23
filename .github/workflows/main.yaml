@@ -37,7 +37,7 @@ jobs:
       - name: Scan image
         uses: anchore/scan-action@v3
         with:
-          image: public.ecr.aws/$ECR_REGISTRY/$IMAGE_NAME:$IMAGE_TAG
+          image: public.ecr.aws/${{ env.ECR_REGISTRY }}/${{ env.IMAGE_NAME }}:${{ env.IMAGE_TAG }}
           fail-build: false # Not recommended for PROD
       
       # - name: Deploy App
