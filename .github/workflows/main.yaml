@@ -50,7 +50,7 @@ jobs:
       - name: Deploy App
         uses: WyriHaximus/github-action-helm3@v2.0
         with:
-          exec: /usr/bin/aws eks update-kubeconfig --name Terraform-EKS && helm upgrade -i go-auth ./.helm -n go-auth
+          exec: helm upgrade -i go-auth ./.helm -n go-auth
           kubeconfig: '${{ secrets.KUBECONFIG }}'
 
       - name: Deploy Prometheus
