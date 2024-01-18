@@ -58,9 +58,9 @@ jobs:
           KUBECONFIG_SECRET: ${{ secrets.KUBECONFIG }}
 
       - name: Deploy App
-        with:
-          exec: helm upgrade -i go-auth ./.helm -n go-auth
+        run: |
+          helm upgrade -i go-auth ./.helm -n go-auth
 
       - name: Deploy Prometheus
-        with:
-          exec: helm upgrade -i -n go-auth prometheus prometheus-community/prometheus -f ./.helm/charts/monitoring/values.yaml
+        run: |
+          helm upgrade -i -n go-auth prometheus prometheus-community/prometheus -f ./.helm/charts/monitoring/values.yaml
