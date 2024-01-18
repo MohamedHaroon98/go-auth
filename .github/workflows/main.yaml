@@ -16,10 +16,13 @@ jobs:
 
     steps:
 
-      - name: Install AWS CLI
+      - name: Install AWS CLI + HELM
         run: |
           sudo apt-get update
           sudo apt-get install -y awscli
+          curl https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-3 > get_helm.sh
+          chmod 700 get_helm.sh
+          ./get_helm.sh
 
 
       - uses: actions/checkout@v4
@@ -47,14 +50,17 @@ jobs:
           image: public.ecr.aws/${{ env.ECR_REGISTRY }}/${{ env.IMAGE_NAME }}:${{ env.IMAGE_TAG }}
           fail-build: false # Not recommended for PROD
       
+
+      - name: Set up KUBECONFIG
+        run: |
+          echo "$KUBECONFIG_SECRET" > $HOME/.kube/config
+        env:
+          KUBECONFIG_SECRET: ${{ secrets.KUBECONFIG }}
+
       - name: Deploy App
-        uses: WyriHaximus/github-action-helm3@v2.0
         with:
           exec: helm upgrade -i go-auth ./.helm -n go-auth
-          kubeconfig: '${{ secrets.KUBECONFIG }}'
 
       - name: Deploy Prometheus
-        uses: WyriHaximus/github-action-helm3@v2.0
         with:
           exec: helm upgrade -i -n go-auth prometheus prometheus-community/prometheus -f ./.helm/charts/monitoring/values.yaml
-          kubeconfig: '${{ secrets.KUBECONFIG }}'
