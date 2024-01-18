@@ -15,6 +15,13 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+
+      - name: Install AWS CLI
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y awscli
+
+
       - uses: actions/checkout@v4
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v1
@@ -43,7 +50,7 @@ jobs:
       - name: Deploy App
         uses: WyriHaximus/github-action-helm3@v2.0
         with:
-          exec: helm upgrade -i go-auth ./.helm -n go-auth
+          exec: /usr/bin/aws eks update-kubeconfig --name Terraform-EKS && helm upgrade -i go-auth ./.helm -n go-auth
           kubeconfig: '${{ secrets.KUBECONFIG }}'
 
       - name: Deploy Prometheus
